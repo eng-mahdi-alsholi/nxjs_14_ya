@@ -9,6 +9,7 @@ import {
 import "./globals.css";
 import Link from "next/link";
 import Headers from "@/components/header/Headers";
+import Footer from "@/components/footer/Footer";
 
 const kufiArabic = Noto_Kufi_Arabic({
   subsets: ["arabic"],
@@ -31,7 +32,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={InterFont.className}>
         <Headers />
-        <main>{children}</main>
+        <main className="fix-height">{children}</main>
+        <Footer  />
       </body>
     </html>
   );
