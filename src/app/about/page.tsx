@@ -5,17 +5,10 @@ import CloudImage from "../../../public/cloud-hosting.png";
 const AboutPage = () => {
   return (
     <section className="fix-height container m-auto">
-      <h1 className="text-3xl font-bold text-gray-800 p-5 ">AboutPage</h1>
-      <div className="">
-        {/* <Image src="/cloud-hosting.png" width={400} height={400} alt="" /> */}
-        <Image
-          src={CloudImage}
-          alt=""
-          width={500}
-          height={500}
-          priority={true}
-        />
-      </div>
+      <h1 className="text-3xl font-bold text-gray-800 p-5 ">About this App</h1>
+      <p className="px-5 text-gray-600 text-xl">
+        The best web hoisting solution for your online success{" "}
+      </p>
     </section>
   );
 };
