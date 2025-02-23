@@ -1,11 +1,7 @@
 import Link from "next/link";
 
 const page = () => {
-  return (
-    <>
-     
-    </>
-  );
+  return <></>;
 };
 
 export default page;

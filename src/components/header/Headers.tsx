@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from "react"; 
+import React from "react";
 import styles from "./headers.module.css";
 import Navbar from "./Navbar";
 
