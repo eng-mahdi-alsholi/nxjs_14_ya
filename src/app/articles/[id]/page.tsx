@@ -1,13 +1,16 @@
 import ArticleItem from "@/components/articles/ArticleItem";
 import { Article } from "@/utils/types";
 import React from "react";
+
+import type { Metadata } from "next";
+let f;
 interface SingleArticlePageProps {
   params: { id: string };
 }
 
 const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
   const { id } = await params;
-  console.log(id);
+  f = id;
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/posts/${id}`
   );
@@ -26,3 +29,7 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
 };
 
 export default SingleArticlePage;
+
+export const metadata: Metadata = {
+  title: `Article Page`,
+};
