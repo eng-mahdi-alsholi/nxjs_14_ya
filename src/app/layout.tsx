@@ -6,6 +6,9 @@ import {
   Inter_Tight,
   Noto_Kufi_Arabic,
 } from "next/font/google";
+
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 import "./globals.css";
 import Link from "next/link";
 import Headers from "@/components/header/Headers";
@@ -32,8 +35,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={InterFont.className}>
         <Headers />
+        <ToastContainer  theme="colored" position="top-center"/>
         <main className="fix-height">{children}</main>
-        <Footer  />
+        <Footer />
       </body>
     </html>
   );
