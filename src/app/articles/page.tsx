@@ -1,5 +1,6 @@
 import ArticleItem from "@/components/articles/ArticleItem";
 import { Article } from "@/utils/types";
+import next from "next";
 import Link from "next/link";
 import React from "react";
 
