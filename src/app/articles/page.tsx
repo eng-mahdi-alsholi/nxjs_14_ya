@@ -1,8 +1,10 @@
 import ArticleItem from "@/components/articles/ArticleItem";
+import SearchArticleInput from "@/components/articles/SearchArticleInput";
 import { Article } from "@/utils/types";
 import next from "next";
 import Link from "next/link";
 import React from "react";
+import Pagination from "./pagination";
 
 const ArticlesPage = async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/posts");
@@ -12,11 +14,13 @@ const ArticlesPage = async () => {
   const articles: Article[] = await response.json();
   return (
     <section className="container m-auto px-5">
+      <SearchArticleInput />
       <div className="flex items-center justify-center flex-wrap gap-7">
-        {articles.map((item: Article) => (
+        {articles.slice(0, 6).map((item: Article) => (
           <ArticleItem article={item} key={item.id} />
         ))}
       </div>
+      <Pagination />
     </section>
   );
 };
