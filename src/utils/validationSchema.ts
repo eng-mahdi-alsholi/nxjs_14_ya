@@ -10,3 +10,9 @@ export const createArticleSchema = z.object({
     .max(100, { message: "Max is 100" }),
   description: z.string().min(10).max(2000),
 });
+
+export const createUserSchema = z.object({
+  username: z.string().min(2).max(100), // optional
+  email: z.string().email(),
+  password: z.string().min(6,{message:"Email at least 6 char"}).max(20),
+});
