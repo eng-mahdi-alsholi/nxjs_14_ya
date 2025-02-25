@@ -1,5 +1,6 @@
 import { prisma } from "@/utils/DB";
 import { UpdateUserDto } from "@/utils/dtos";
+import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
 interface GetUserParamsProps {
@@ -30,6 +31,12 @@ export async function PUT(
         { message: "User Id not found " },
         { status: 404 }
       );
+    let hashedPassword;
+    if (body.password) {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(body.password, salt);
+    }
+
     const updated = await prisma.user.update({
       where: {
         id: Number(id),
@@ -37,6 +44,7 @@ export async function PUT(
       data: {
         ...user,
         ...body,
+        password: hashedPassword,
       },
     });
     if (!updated)

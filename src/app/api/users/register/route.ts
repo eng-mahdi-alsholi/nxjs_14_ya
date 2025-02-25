@@ -48,9 +48,9 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const token =null
+    const token = null;
 
-    return NextResponse.json({...newUser, token}, { status: 201 } );
+    return NextResponse.json({ ...newUser, token }, { status: 201 });
   } catch (e) {
     return NextResponse.json(
       { message: "Internal server Error  " },

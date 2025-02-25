@@ -14,5 +14,10 @@ export const createArticleSchema = z.object({
 export const createUserSchema = z.object({
   username: z.string().min(2).max(100), // optional
   email: z.string().email(),
-  password: z.string().min(6,{message:"Email at least 6 char"}).max(20),
+  password: z.string().min(6, { message: "Email at least 6 char" }).max(20),
+});
+
+export const loginUserSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6, { message: "Email at least 6 char" }).max(20),
 });
