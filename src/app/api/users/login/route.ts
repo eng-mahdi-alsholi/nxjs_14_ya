@@ -3,6 +3,8 @@ import { LoginUserDto } from "@/utils/dtos";
 import { loginUserSchema } from "@/utils/validationSchema";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
+import { generateJWT } from "@/utils/generateToken";
 
 /**
  * @method POST
@@ -38,7 +40,11 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
 
-    const token = null;
+    const token = generateJWT({
+      id: user.id,
+      isAdmin: user.isAdmin,
+      username: user.username,
+    });
     const { email, username, isAdmin } = user;
 
     return NextResponse.json(

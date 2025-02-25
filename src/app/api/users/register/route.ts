@@ -3,6 +3,8 @@ import { RegisterUserDto } from "@/utils/dtos";
 import { createUserSchema } from "@/utils/validationSchema";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
+import { generateJWT } from "@/utils/generateToken";
 
 /**
  * @method POST
@@ -47,8 +49,11 @@ export async function POST(request: NextRequest) {
         isAdmin: true,
       },
     });
-
-    const token = null;
+    const token = generateJWT({
+      id: newUser.id,
+      isAdmin: newUser.isAdmin,
+      username: newUser.username,
+    });
 
     return NextResponse.json({ ...newUser, token }, { status: 201 });
   } catch (e) {

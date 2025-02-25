@@ -5,3 +5,8 @@ export type Article = {
   body: string;
 };
 
+export type JwtPayloadType = {
+  id: number;
+  isAdmin: boolean;
+  username: string;
+};
