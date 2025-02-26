@@ -4,7 +4,7 @@ import { loginUserSchema } from "@/utils/validationSchema";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import { generateJWT } from "@/utils/generateToken";
+import { setCookie } from "@/utils/generateToken";
 
 /**
  * @method POST
@@ -40,16 +40,18 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
 
-    const token = generateJWT({
+    const cookie = setCookie({
       id: user.id,
       isAdmin: user.isAdmin,
       username: user.username,
     });
-    const { email, username, isAdmin } = user;
 
     return NextResponse.json(
-      { email, username, isAdmin, token },
-      { status: 201 }
+      { message: "Authenticated" },
+      {
+        status: 201,
+        headers: { "Set-Cookie": cookie },
+      }
     );
   } catch (e) {
     return NextResponse.json(

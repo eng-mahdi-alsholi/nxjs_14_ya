@@ -4,7 +4,7 @@ import { createUserSchema } from "@/utils/validationSchema";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import { generateJWT } from "@/utils/generateToken";
+import { generateJWT, setCookie } from "@/utils/generateToken";
 
 /**
  * @method POST
@@ -49,13 +49,16 @@ export async function POST(request: NextRequest) {
         isAdmin: true,
       },
     });
-    const token = generateJWT({
+    const cookie = setCookie({
       id: newUser.id,
       isAdmin: newUser.isAdmin,
       username: newUser.username,
     });
 
-    return NextResponse.json({ ...newUser, token }, { status: 201 });
+    return NextResponse.json(
+      { ...newUser, message: "Registered and Authenticated" },
+      { status: 201, headers: { "Set-Cookie": cookie } }
+    );
   } catch (e) {
     return NextResponse.json(
       { message: "Internal server Error  " },

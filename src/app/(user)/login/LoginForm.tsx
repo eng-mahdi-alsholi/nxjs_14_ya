@@ -10,7 +10,6 @@ const LoginForm = () => {
   const formSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault();
     if (email == "" || password == "") toast.error("Plz enter email and ");
-    console.log({ email, password });
     router.replace("/");
   };
   return (

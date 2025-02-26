@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { generateJWT } from "@/utils/generateToken";
 import { JwtPayloadType } from "@/utils/types";
+import { verifyToken } from "@/utils/verifyToken";
 
 interface Props {
   params: { id: string };
@@ -29,24 +30,26 @@ export async function DELETE(request: NextRequest, { params }: Props) {
       return NextResponse.json({ message: "User nor Found" }, { status: 404 });
     }
 
-    const authToken = (await request.headers.get("authtoken")) as string;
+    // const authToken = (await request.headers.get("authtoken")) as string; // old
 
-    const userFromToken = jwt.verify(
-      authToken,
-      process.env.JWT_SECRET as string
-    ) as JwtPayloadType;
-    if (!userFromToken) {
-      return NextResponse.json({ message: "Access Denied " }, { status: 403 });
-    }
+    // const jwtToken = await request.cookies.get("jwtToken");
+    // const token = jwtToken?.value as string;
 
-    if (Number(id) === userFromToken.id) {
-      await prisma.user.delete({
+    // const userFromToken = jwt.verify(
+    //   token,
+    //   process.env.JWT_SECRET as string
+    // ) as JwtPayloadType;
+    const userFromToken = verifyToken(request);
+
+    if (userFromToken !== null && userFromToken.id === user.id) {
+      await prisma.user.delete({ 
         where: {
           id: Number(id),
         },
       });
       return NextResponse.json({ message: "User Deleted " }, { status: 200 });
     }
+
     return NextResponse.json({ message: "Only User himself" }, { status: 403 });
   } catch (e) {
     return NextResponse.json(

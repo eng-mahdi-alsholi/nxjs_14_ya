@@ -2,9 +2,11 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // This function can be marked `async` if using `await` inside
-export async function middleware(request: NextRequest) {
-  const authToken = (await request.headers.get("authtoken")) as string;
-  if (!authToken) {
+export function middleware(request: NextRequest) {
+  const authToken = request.headers.get("authtoken") as string;
+  const jwtToken = request.cookies.get("jwtToken");
+  const token = jwtToken?.value as string;
+  if (!token) {
     return NextResponse.json(
       {
         message: " No Token provided Access denied , message from middleware ",
