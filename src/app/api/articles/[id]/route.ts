@@ -143,23 +143,29 @@ export async function DELETE(
       where: {
         id: Number(id),
       },
+      include: {
+        comments: true,
+      },
     });
     if (!article)
       return NextResponse.json(
         { message: "Article Id not found " },
         { status: 404 }
       );
-
-    const deleteArticle = await prisma.article.delete({
+    // deleting the article
+    await prisma.article.delete({
       where: {
         id: Number(id),
       },
     });
-    if (!deleteArticle)
-      return NextResponse.json(
-        { message: "Article Id not Deleted " },
-        { status: 404 }
-      );
+    //delete all comment for this article
+    const commentIds: number[] = article?.comments.map((comment) => comment.id);
+
+    await prisma.comment.deleteMany({
+      where: {
+        id: { in: commentIds },
+      },
+    });
 
     return NextResponse.json({ message: "Article Deleted" }, { status: 200 });
   } catch (e) {

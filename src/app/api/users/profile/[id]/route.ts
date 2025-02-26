@@ -25,6 +25,9 @@ export async function DELETE(request: NextRequest, { params }: Props) {
       where: {
         id: Number(id),
       },
+      include: {
+        comments: true,
+      },
     });
     if (!user) {
       return NextResponse.json({ message: "User nor Found" }, { status: 404 });
@@ -42,11 +45,20 @@ export async function DELETE(request: NextRequest, { params }: Props) {
     const userFromToken = verifyToken(request);
 
     if (userFromToken !== null && userFromToken.id === user.id) {
+      // delete the user
       await prisma.user.delete({
         where: {
           id: Number(id),
         },
       });
+      // delete the comment that belong to this user
+      const commentIds: number[] = user?.comments.map((comment) => comment.id);
+      await prisma.comment.deleteMany({
+        where: {
+          id: { in: commentIds },
+        },
+      });
+
       return NextResponse.json({ message: "User Deleted " }, { status: 200 });
     }
 
