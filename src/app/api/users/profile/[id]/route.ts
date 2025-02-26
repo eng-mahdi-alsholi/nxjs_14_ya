@@ -1,5 +1,5 @@
 import { prisma } from "@/utils/DB";
-import { RegisterUserDto } from "@/utils/dtos";
+import { RegisterUserDto, UpdateUserDto } from "@/utils/dtos";
 import { createUserSchema } from "@/utils/validationSchema";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
@@ -42,7 +42,7 @@ export async function DELETE(request: NextRequest, { params }: Props) {
     const userFromToken = verifyToken(request);
 
     if (userFromToken !== null && userFromToken.id === user.id) {
-      await prisma.user.delete({ 
+      await prisma.user.delete({
         where: {
           id: Number(id),
         },
@@ -52,6 +52,117 @@ export async function DELETE(request: NextRequest, { params }: Props) {
 
     return NextResponse.json({ message: "Only User himself" }, { status: 403 });
   } catch (e) {
+    return NextResponse.json(
+      { message: "Internal server Error  " },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * @method GET
+ * @route ~/api/users/profile/:id
+ * @desc Get Profile By id
+ * @access private (only user himself)
+ */
+
+export async function GET(request: NextRequest, { params }: Props) {
+  try {
+    const { id } = await params;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        isAdmin: true,
+        createdAt: true,
+      },
+    });
+    if (!user) {
+      return NextResponse.json(
+        { message: "User not Found  " },
+        { status: 404 }
+      );
+    }
+
+    const userFromToken = verifyToken(request);
+    if (userFromToken === null || userFromToken?.id !== user.id) {
+      return NextResponse.json(
+        { message: "No token , or not valid token ,access denied  " },
+        { status: 403 }
+      );
+    }
+    return NextResponse.json(user, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Internal server Error  " },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * @method PUT
+ * @route ~/api/users/profile/:id
+ * @desc Update Profile By id
+ * @access private (only user himself)
+ */
+
+export async function PUT(request: NextRequest, { params }: Props) {
+  try {
+    const { id } = await params;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        isAdmin: true,
+        createdAt: true,
+      },
+    });
+    if (!user) {
+      return NextResponse.json({ message: "User not Found " }, { status: 404 });
+    }
+
+    const userFromToken = verifyToken(request);
+    if (userFromToken === null || userFromToken?.id !== user.id) {
+      return NextResponse.json(
+        { message: "No token , or not valid token ,access denied  " },
+        { status: 403 }
+      );
+    }
+
+    const body = (await request.json()) as UpdateUserDto;
+    if (body.password) {
+      const salt = await bcrypt.genSalt(10);
+      body.password = await bcrypt.hash(body.password, salt);
+    }
+    const updateUser = await prisma.user.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        username: body.username,
+        email: body.email,
+        password: body.password,
+      },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        isAdmin: true,
+        createdAt: true,
+      },
+    });
+
+    return NextResponse.json(updateUser, { status: 200 });
+  } catch (error) {
     return NextResponse.json(
       { message: "Internal server Error  " },
       { status: 500 }
