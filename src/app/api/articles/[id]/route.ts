@@ -3,6 +3,7 @@ import { articles } from "@/utils/data";
 import { NextRequest, NextResponse } from "next/server";
 import { Article } from "@prisma/client";
 import { prisma } from "@/utils/DB";
+import { verifyToken } from "@/utils/verifyToken";
 
 // interface GetSingleParamsProps {
 //   params: { id: string };
@@ -56,6 +57,14 @@ export async function PUT(
   request: NextRequest,
   { params }: GetSingleParamsProps
 ) {
+  const userFromToken = verifyToken(request);
+  if (userFromToken === null || !userFromToken.isAdmin) {
+    return NextResponse.json(
+      { message: "Only Admin can edit Article" },
+      { status: 403 }
+    );
+  }
+
   const { id } = await params;
   const body = (await request.json()) as UpdateArticleDto;
 
@@ -104,10 +113,17 @@ export async function DELETE(
   request: NextRequest,
   { params }: GetSingleParamsProps
 ) {
+  const userFromToken = verifyToken(request);
+  if (userFromToken === null || !userFromToken.isAdmin)
+    return NextResponse.json(
+      { message: "Only Admin can Delete Articles " },
+      { status: 403 }
+    );
+
   const { id } = await params;
 
   try {
-    const article = prisma.article.findUnique({
+    const article = await prisma.article.findUnique({
       where: {
         id: Number(id),
       },
