@@ -31,6 +31,22 @@ export async function GET(
       where: {
         id: Number(id),
       },
+      include: {
+        comments: {
+          include: {
+            user: {
+              select: {
+                username: true,
+                id: true,
+                email: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
     });
     if (!article)
       return NextResponse.json(
