@@ -17,6 +17,5 @@ export function setCookie(jwtPayLoad: JwtPayloadType): string {
     path: "/",
     maxAge: 60 * 60 * 24, // 1 day
   });
-
   return cookie;
 }

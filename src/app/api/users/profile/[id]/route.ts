@@ -1,6 +1,6 @@
 import { prisma } from "@/utils/DB";
 import { RegisterUserDto, UpdateUserDto } from "@/utils/dtos";
-import { createUserSchema } from "@/utils/validationSchema";
+import { createUserSchema, updateUserSchema } from "@/utils/validationSchema";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
@@ -139,7 +139,21 @@ export async function PUT(request: NextRequest, { params }: Props) {
     }
 
     const body = (await request.json()) as UpdateUserDto;
+    const validate = updateUserSchema.safeParse(body);
+    if (!validate.success) {
+      return NextResponse.json(
+        { message: validate.error.errors[0].message },
+        { status: 400 }
+      );
+    }
+
     if (body.password) {
+      if (body.password.length < 6) {
+        return NextResponse.json(
+          { message: "Password Must be At least 6 Characters " },
+          { status: 400 }
+        );
+      }
       const salt = await bcrypt.genSalt(10);
       body.password = await bcrypt.hash(body.password, salt);
     }

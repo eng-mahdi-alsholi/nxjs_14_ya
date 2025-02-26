@@ -14,10 +14,31 @@ export const createArticleSchema = z.object({
 export const createUserSchema = z.object({
   username: z.string().min(2).max(100), // optional
   email: z.string().email(),
-  password: z.string().min(6, { message: "Email at least 6 char" }).max(20),
+  password: z.string().min(6, { message: "Password at least 6 char" }).max(20),
+});
+export const updateUserSchema = z.object({
+  username: z.string().min(2).max(100).optional(),
+  email: z.string().email().optional(),
+  password: z
+    .string()
+    .min(6, { message: "Password at least 6 char" })
+    .max(20)
+    .optional(),
 });
 
 export const loginUserSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6, { message: "Email at least 6 char" }).max(20),
+  password: z.string().min(6, { message: "Password at least 6 char" }).max(20),
+});
+
+export const createCommentSchema = z.object({
+  text: z
+    .string({
+      required_error: "text is required ",
+    })
+    .min(2)
+    .max(100),
+  articleId: z.number({
+    required_error: "articleId is required ",
+  }),
 });

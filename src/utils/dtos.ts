@@ -30,3 +30,7 @@ export interface UpdateUserDto {
   email?: string;
   password?: string;
 }
+export interface CreateCommentDTO {
+  text: string;
+  articleId: number;
+}
