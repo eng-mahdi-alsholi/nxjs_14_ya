@@ -10,17 +10,10 @@ import { NextRequest, NextResponse } from "next/server";
  * @desc Get Article Number
  * @access public
  */
-export async function GET(request: NextRequest) {
-  const userFromToken = verifyToken(request);
-  if (userFromToken === null || !userFromToken.isAdmin) {
-    return NextResponse.json(
-      { message: "Only Admin Can create Post " },
-      { status: 403 }
-    );
-  }
+export async function GET() {
   try {
     const count = await prisma.article.count();
-    return NextResponse.json({count}, { status: 200 });
+    return NextResponse.json({ count }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { message: "internal  server error" },
