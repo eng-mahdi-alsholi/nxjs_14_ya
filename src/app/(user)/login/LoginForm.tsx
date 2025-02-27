@@ -1,17 +1,31 @@
 "use client";
+import ButtonSpinner from "@/components/ButtonSpinner";
+import { DOMAIN } from "@/utils/constans";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 const LoginForm = () => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const formSubmitHandler = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const formSubmitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email == "" || password == "") toast.error("Plz enter email and ");
-    router.replace("/");
+
+    try {
+      await axios.post(`${DOMAIN}/api/users/login`, { email, password });
+      router.replace("/");
+      setLoading(true);
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      setLoading(false);
+    }
   };
+
   return (
     <form className="flex flex-col" onSubmit={formSubmitHandler}>
       <input
@@ -29,10 +43,11 @@ const LoginForm = () => {
         placeholder="Enter your password"
       />
       <button
+      disabled={loading}
         className="text-2xl text-white bg-blue-800 p-2 rounded-lg font-bold"
         type="submit"
       >
-        Login
+        {loading ? <ButtonSpinner />: "Login"}
       </button>
     </form>
   );

@@ -17,3 +17,16 @@ export function verifyToken(request: NextRequest): JwtPayloadType | null {
     return null;
   }
 }
+
+export function verifyTokenForPage(token: string): JwtPayloadType | null {
+  try {
+    const userPayload = jwt.verify(
+      token,
+      process.env.JWT_SECRET as string
+    ) as JwtPayloadType;
+    if (!userPayload) return null;
+    return userPayload;
+  } catch (e) {
+    return null;
+  }
+}
