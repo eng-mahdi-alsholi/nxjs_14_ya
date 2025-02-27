@@ -18,6 +18,7 @@ const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
   const article: singleArticle = await getSingleArticle(id);
   const token = (await cookies()).get("jwtToken")?.value || "";
   const payload = verifyTokenForPage(token);
+  // await new Promise((res) => setTimeout(res, 5000));
   //  console.log('----------',article)
   // const response = await fetch(
   //   `https://jsonplaceholder.typicode.com/posts/${id}`

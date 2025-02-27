@@ -1,15 +1,33 @@
 "use client";
-import React, { useState } from "react";
+import { DOMAIN } from "@/utils/constans";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import React, { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 
 const AddArticleForm = () => {
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const formSubmitHandler = (e: React.FormEvent) => {
+  const formSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
     if (title == "" || description == "")
       toast.error("Plz enter title and description");
-    console.log({ title, description });
+
+    try {
+      await axios.post(`${DOMAIN}api/articles/`, {
+        title,
+        description,
+      });
+      toast.success("New Article Added Successfully");
+      setTitle("");
+      setDescription("");
+
+      router.refresh();
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
   return (
     <form className="flex flex-col" onSubmit={formSubmitHandler}>

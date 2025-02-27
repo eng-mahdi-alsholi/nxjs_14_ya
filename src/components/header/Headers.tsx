@@ -13,7 +13,7 @@ const Headers = async () => {
 
   return (
     <header className={styles.header}>
-      <Navbar />
+      <Navbar isAdmin={payload?.isAdmin || false} />
       <div className={styles.right}>
         {!payload ? (
           <>
@@ -29,8 +29,8 @@ const Headers = async () => {
             <strong className="text-blue-800 md:text-xl capitalize">
               {payload.username}
             </strong>
-        
-            <LogoutButton /> 
+
+            <LogoutButton />
           </>
         )}
       </div>
