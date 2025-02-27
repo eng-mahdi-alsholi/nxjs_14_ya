@@ -21,3 +21,17 @@ export async function getArticlesCount(): Promise<number> {
   const { count } = (await response.json()) as { count: number };
   return count;
 }
+
+// get Article based on search
+export async function getArticlesBasedOnSearch(
+  searchText: string | undefined
+): Promise<Article[]> {
+  const response = await fetch(
+    `http://localhost:3000/api/articles/search?searchText=${searchText}`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch articles ....... ");
+  }
+
+  return response.json();
+}
