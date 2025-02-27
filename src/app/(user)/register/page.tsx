@@ -1,15 +1,16 @@
 import React from "react";
 import RegisterForm from "./RegisterForm";
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
+// import { redirect } from "next/navigation" ;
+// import { cookies } from "next/headers";
 const RegisterPage = async () => {
   // const token = await cookies().get("jwtToken")?.value; // error
-  const cookieStore = await cookies();
-  const token = cookieStore.get("jwtToken")?.value;
-  
-  if (token) {
-    redirect("/");
-  }
+  // const cookieStore = await cookies();
+  // const token = cookieStore.get("jwtToken")?.value;
+
+  // if (token) {
+  //   redirect("/");
+  // }
+  // no need ,middleware
   return (
     <section className="fix-height container px-7 flex items-center justify-center ">
       <div className="m-auto bg-white rounded-lg p-5 w-full md:w-2/3">
