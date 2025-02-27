@@ -1,3 +1,5 @@
+import { DOMAIN } from "@/utils/constans";
+import { singleArticle } from "@/utils/types";
 import { Article } from "@prisma/client";
 
 export async function getArticles(
@@ -9,7 +11,6 @@ export async function getArticles(
   if (!response.ok) {
     throw new Error("Failed to fetch articles ....... ");
   }
-
   return response.json();
 }
 
@@ -33,5 +34,16 @@ export async function getArticlesBasedOnSearch(
     throw new Error("Failed to fetch articles ....... ");
   }
 
+  return response.json();
+}
+
+// get single article
+export async function getSingleArticle(id: string): Promise<singleArticle> {
+  const response = await fetch(`${DOMAIN}api/articles/${id}`, {
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch article ....... ");
+  }
   return response.json();
 }
