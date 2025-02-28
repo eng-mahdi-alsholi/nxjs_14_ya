@@ -1,4 +1,3 @@
-import { articles } from "@/utils/data";
 import { CreateArticleDto } from "@/utils/dtos";
 // import { Article } from "@/utils/types";
 import { createArticleSchema } from "@/utils/validationSchema";
@@ -23,6 +22,9 @@ export async function GET(request: NextRequest) {
     const newArticle = await prisma.article.findMany({
       skip: (Number(pageNumber) - 1) * ARTICLE_PER_PAGE,
       take: ARTICLE_PER_PAGE,
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     return NextResponse.json(newArticle, { status: 200 });
   } catch (e) {
